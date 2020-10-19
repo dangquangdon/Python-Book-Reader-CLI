@@ -6,7 +6,7 @@ You can have all your books stored in a directory and have `pybookreader` to sca
 ## Installation
 
 ```
-pip install PyBookReader==0.1
+pip install PyBookReader
 ```
 
 ## Usage
