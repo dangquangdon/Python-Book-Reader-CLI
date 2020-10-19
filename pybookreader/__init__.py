@@ -20,7 +20,7 @@ def book_reader(ctx):
 
 @book_reader.command()
 @click.option("-l", "--location", help="Path to the folder contains your books")
-@click.option("--save", is_flag=True)
+@click.option("--save", is_flag=True, help="Save the books after scanning them")
 @click.pass_context
 def scan_books(ctx, location, save):
     """Scan books in a given directory"""
