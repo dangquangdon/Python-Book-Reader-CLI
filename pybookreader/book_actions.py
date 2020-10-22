@@ -11,13 +11,16 @@ from .models.book import Book
 
 
 class BookAction:
-    def __init__(self, books_dir=None, session=None, speak_engine=None, start_page=0):
+    def __init__(
+        self, books_dir=None, session=None, speak_engine=None, start_page=0, **kwargs
+    ):
         self.books_dir = books_dir
         self.books = []
         self.session = session
         self.speak_engine = speak_engine
         self.current_page = 0
         self.start_page = start_page
+        self.from_beginning = kwargs.get("from_beginning", False)
 
     def bookTup(self):
         return namedtuple("Book", ["num", "book_name", "book_path"])
@@ -113,18 +116,25 @@ class BookAction:
             pages = list(pdftotext.PDF(book_file))
 
         current_page = book.stop_at_page
+        if not self.from_beginning:
+            if self.start_page:
+                pages = pages[self.start_page :]
+                self.current_page = self.start_page
+            elif current_page and not self.start_page:
+                pages = pages[current_page:]
+                self.current_page = current_page
 
-        if self.start_page:
-            pages = pages[self.start_page :]
-        elif current_page and not self.start_page:
-            pages = pages[current_page:]
+        click.clear()
         click.echo()
-        click.secho("Press Ctrl + C to stop reading", bold=True)
-
         try:
             for ind, page in enumerate(pages):
-                self.current_page = ind
+                if self.from_beginning or (not self.start_page and not current_page):
+                    self.current_page = ind
+
                 click.echo(page)
+                click.echo()
+                click.secho("Press Ctrl + C to stop reading", bold=True)
+
                 self.speak_engine.say(page)
                 self.speak_engine.runAndWait()
                 click.clear()

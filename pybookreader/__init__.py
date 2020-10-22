@@ -45,15 +45,23 @@ def show_all_books(ctx):
 @click.option(
     "--start-from-page", help="Start reading from the specified page", default=0
 )
+@click.option(
+    "--start-from-beginning",
+    help="Start reading all over from the begining",
+    is_flag=True,
+)
 @click.pass_context
-def read_book_from_db(ctx, book, id, start_from_page):
+def read_book_from_db(ctx, book, id, start_from_page, start_from_beginning):
     """
     Read a book already stored in the database by the book's name
     or its ID.
     """
     engine = pyttsx3.init()
     actions = BookAction(
-        session=ctx.obj["session"], speak_engine=engine, start_page=start_from_page
+        session=ctx.obj["session"],
+        speak_engine=engine,
+        start_page=start_from_page,
+        from_beginning=start_from_beginning,
     )
     book_query = actions.session.query(Book)
     book_to_read = None
