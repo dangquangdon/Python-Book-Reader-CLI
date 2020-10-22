@@ -5,7 +5,7 @@ with open("readme.md", "r") as read_me:
 
 setup(
     name="PyBookReader",
-    version="1.0.0",
+    version="1.0.1",
     packages=find_packages(),
     include_package_data=True,
     long_description=long_description,
